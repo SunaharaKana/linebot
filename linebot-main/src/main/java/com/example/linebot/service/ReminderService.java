@@ -7,7 +7,10 @@ import com.example.linebot.value.Reminderltem;
 import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.message.TextMessage;
+import org.springframework.stereotype.Service;
 
+
+@Service
 public class ReminderService {
 
     public RemindOn doReplyOfNewItem(MessageEvent<TextMessageContent> event){

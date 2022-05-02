@@ -1,6 +1,7 @@
 package com.example.linebot;
 
 import com.example.linebot.replier.Follow;
+import com.example.linebot.replier.RemindOn;
 import com.linecorp.bot.model.event.FollowEvent;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
@@ -15,11 +16,21 @@ import com.example.linebot.replier.Parrot;
 
 import com.example.linebot.replier.Intent;
 
+import com.example.linebot.service.ReminderService;
+import org.springframework.beans.factory.annotation.Autowired;
+
 @LineMessageHandler
 public class Callback {
 
     private static final Logger log = LoggerFactory.getLogger(Callback.class);
 
+
+    private final ReminderService reminderService;
+
+    @Autowired
+    public Callback(ReminderService reminderService){
+        this.reminderService = reminderService;
+    }
     // フォローイベントに対応する
     @EventMapping
     public Message handleFollow(FollowEvent event) {
@@ -34,11 +45,11 @@ public class Callback {
 
         TextMessageContent tmc = event.getMessage();
         String text = tmc.getText();
-        Intent intent = Intent.whichIntent(text);
-        switch (intent){
+        switch (Intent.whichIntent(text)){
             case REMINDER:
-                return new TextMessage("リマインダーです");
-            case UNKNOUWN:
+                RemindOn remindOn = reminderService.doReplyOfNewItem(event);
+                return remindOn.reply();
+            case UNKNOWN:
             default:
                 Parrot parrot = new Parrot(event);
                 return parrot.reply();
