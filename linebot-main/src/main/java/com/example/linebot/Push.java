@@ -18,6 +18,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutionException;
 
+import org.springframework.scheduling.annotation.Scheduled;
+
 
 @RestController // <1>
 public class Push {
@@ -42,6 +44,7 @@ public class Push {
 
     // 時報をpushする
     @GetMapping("timetone") //<2>
+    @Scheduled(cron = "0 */1 * * * *",zone = "Asia/Tokyo")
     public String pushTimeTone(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("a K:mm"); // <3>
         String text = dtf.format(LocalDateTime.now());
