@@ -21,6 +21,14 @@ public class ReminderRepository {
         this.jdbc = jdbcTemplate;
     }
 
+    public void deletePreviousItems(){
+        //language=sql
+        String sql = "delete from reminder_item " +
+                "where push_at <= ? ";
+
+        LocalTime now = LocalTime.now();
+        jdbc.update(sql,now);
+    }
     public List<ReminderTuple> findPreviousItems(){
         //language=sql
         String sql = "select user_id, push_at, push_text " +
