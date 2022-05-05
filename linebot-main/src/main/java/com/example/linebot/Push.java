@@ -18,6 +18,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutionException;
 
+import com.example.linebot.service.ReminderService;
+import java.util.List;
+
 import org.springframework.scheduling.annotation.Scheduled;
 
 
@@ -31,10 +34,21 @@ public class Push {
 
     private final LineMessagingClient messagingClient;
 
+    private final ReminderService reminderService; // <1>
+
+    @Autowired // <2>
+    public Push(LineMessagingClient lineMessagingClient,
+                ReminderService reminderService){
+        this.messagingClient = lineMessagingClient;
+        this.reminderService = reminderService;
+    }
+
+    /*
     @Autowired
     public Push(LineMessagingClient lineMessagingClient){
         this.messagingClient = lineMessagingClient;
     }
+     */
 
     // テスト
     @GetMapping("test")
@@ -44,7 +58,7 @@ public class Push {
 
     // 時報をpushする
     @GetMapping("timetone") //<2>
-    @Scheduled(cron = "0 */1 * * * *",zone = "Asia/Tokyo")
+    //@Scheduled(cron = "0 */1 * * * *",zone = "Asia/Tokyo")
     public String pushTimeTone(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("a K:mm"); // <3>
         String text = dtf.format(LocalDateTime.now());
@@ -57,6 +71,21 @@ public class Push {
             throw new RuntimeException(e);
         }
         return text; // <5>
+    }
+
+    @Scheduled(cron = "0 */1 * * * *",zone = "Asia/Tokyo")
+    public void pushReminder(){
+        try {
+            List<PushMessage> messages =
+                    reminderService.doPushReminderItems();
+            for (PushMessage message : messages){
+                BotApiResponse resp =
+                       messagingClient.pushMessage(message).get(); // <2>
+                log.info("Sent messages: {}", resp);
+            }
+        } catch (InterruptedException | ExecutionException e){
+            throw new RuntimeException(e);
+        }
     }
 
 }
