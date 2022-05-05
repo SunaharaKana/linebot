@@ -12,6 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.linebot.repository.ReminderRepository;
 
+import com.example.linebot.value.ReminderTuple;
+import com.linecorp.bot.model.PushMessage;
+import java.util.List;
+
 @Service
 public class ReminderService {
 
@@ -20,6 +24,24 @@ public class ReminderService {
     @Autowired
     public ReminderService(ReminderRepository reminderRepository){
         this.repository = reminderRepository;
+    }
+
+    public List<PushMessage> doPushReminderItems(){
+        List<ReminderTuple> ReminderTuples =
+                repository.findPreviousItems(); // <1>
+
+        List<PushMessage> pushMessages = ReminderTuples.stream()
+                .map(tuple -> toPushMessage(tuple))
+                .toList(); // <2>
+
+        return pushMessages;
+    }
+
+    private PushMessage toPushMessage(ReminderTuple tuple){  // <3>
+        String userId = tuple.getUserId();
+        String pushText = tuple.getPushText();
+        String body = String.format("%s の時間です!",pushText);
+        return new PushMessage(userId, new TextMessage(body));
     }
 
     public RemindOn doReplyOfNewItem(MessageEvent<TextMessageContent> event){
