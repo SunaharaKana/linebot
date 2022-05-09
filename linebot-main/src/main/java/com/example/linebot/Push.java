@@ -1,5 +1,6 @@
 package com.example.linebot;
 
+import com.example.linebot.repository.ReminderRepository;
 import com.linecorp.bot.model.response.BotApiResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -83,6 +84,8 @@ public class Push {
                        messagingClient.pushMessage(message).get(); // <2>
                 log.info("Sent messages: {}", resp);
             }
+            //追加
+            //reminderService.doDelete();
         } catch (InterruptedException | ExecutionException e){
             throw new RuntimeException(e);
         }

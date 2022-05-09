@@ -34,6 +34,7 @@ public class ReminderService {
                 .map(tuple -> toPushMessage(tuple))
                 .toList(); // <2>
 
+        repository.deletePreviousItems();
         return pushMessages;
     }
 
@@ -55,4 +56,14 @@ public class ReminderService {
 
         return new RemindOn(text);
     }
+
+    //追加
+    /*
+    public void doDelete(){
+        repository.deletePreviousItems();
+    }
+
+     */
+
+
 }
