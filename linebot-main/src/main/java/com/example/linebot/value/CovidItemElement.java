@@ -24,6 +24,10 @@ public class CovidItemElement {
     }
 
     public LocalDate getDate(){
+        return date;
+    }
+
+    public String getNameJp(){
         return nameJp;
     }
 
