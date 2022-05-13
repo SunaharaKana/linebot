@@ -1,7 +1,7 @@
 package com.example.linebot;
 
-import com.example.linebot.replier.Follow;
-import com.example.linebot.replier.RemindOn;
+import com.example.linebot.replier.*;
+import com.example.linebot.service.CovidGovService;
 import com.linecorp.bot.model.event.FollowEvent;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
@@ -12,9 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.event.MessageEvent;
-import com.example.linebot.replier.Parrot;
-
-import com.example.linebot.replier.Intent;
 
 import com.example.linebot.service.ReminderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +24,13 @@ public class Callback {
 
     private final ReminderService reminderService;
 
+    private final CovidGovService covidGovService;
+
     @Autowired
-    public Callback(ReminderService reminderService){
+    public Callback(ReminderService reminderService,
+                    CovidGovService covidGovService){
         this.reminderService = reminderService;
+        this.covidGovService = covidGovService;
     }
     // フォローイベントに対応する
     @EventMapping
@@ -49,6 +50,9 @@ public class Callback {
             case REMINDER:
                 RemindOn remindOn = reminderService.doReplyOfNewItem(event);
                 return remindOn.reply();
+            case COVID_TOTAL:
+                CovidReport covidReport = covidGovService.doReplyWithCovid(event);
+                return covidReport.reply();
             case UNKNOWN:
             default:
                 Parrot parrot = new Parrot(event);
