@@ -53,6 +53,10 @@ public class Callback {
             case COVID_TOTAL:
                 CovidReport covidReport = covidGovService.doReplyWithCovid(event);
                 return covidReport.reply();
+                //追加
+            case COVID_RATE:
+                CovidRate covidRate = covidGovService.doReplyRate(event);
+                return covidRate.reply();
             case UNKNOWN:
             default:
                 Parrot parrot = new Parrot(event);

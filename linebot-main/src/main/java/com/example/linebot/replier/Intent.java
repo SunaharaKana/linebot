@@ -9,6 +9,8 @@ public enum Intent {
     //メッセージの正規表現パターンに対応するやり取り状態の定義
     REMINDER("^(\\d{1,2}):(\\d{1,2})に(.{1,32})$"),
     COVID_TOTAL("^(.*)の感染者数$"),
+    //追加
+    COVID_RATE("^(.*)の新規感染者増加率"),
     UNKNOWN(".+");
 
     private final String regexp;

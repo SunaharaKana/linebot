@@ -1,8 +1,10 @@
 package com.example.linebot.service;
 
+import com.example.linebot.replier.CovidRate;
 import com.example.linebot.replier.CovidReport;
 import com.example.linebot.repository.CovidGovRepository;
 import com.example.linebot.value.CovidItem;
+import com.example.linebot.value.CovidRateSlot;
 import com.example.linebot.value.CovidSlot;
 import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
@@ -29,5 +31,16 @@ public class CovidGovService {
         CovidItem covidItem =
                 covidGovRepository.findCovidGocAPI(region); // (2)
         return new CovidReport(covidItem); // (3)
+    }
+
+    public CovidRate doReplyRate(
+            MessageEvent<TextMessageContent> event){
+        TextMessageContent tmc = event.getMessage();
+        String text = tmc.getText();
+        CovidRateSlot covidRateSlot = new CovidRateSlot(text);
+        String region = covidRateSlot.getRegion();
+        CovidItem covidItem =
+                covidGovRepository.findCovidGocAPI(region);
+        return new CovidRate(covidItem);
     }
 }

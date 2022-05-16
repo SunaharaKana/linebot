@@ -5,21 +5,22 @@ import com.example.linebot.value.CovidItemElement;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
 
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.List;
 
-public class CovidReport implements Replier{
+//追加
+//増加率に関してreplier
+
+public class CovidRate implements Replier{
 
     private static final String MESSAGE_FORMAT =
-            "%s の %s 月 %s 日時点の感染者数は %d 人";
-
+            "%s の 新規感染者増加率は %f です";
+    
     private final CovidItem item;
-
-    public CovidReport(CovidItem item){
+    
+    public CovidRate(CovidItem item){
         this.item = item;
     }
-
+    
     @Override
     public Message reply(){
         String body = "データがありません";
@@ -30,16 +31,15 @@ public class CovidReport implements Replier{
         return new TextMessage(body);
     }
 
-    private String getMessageOfLast(){
+    private String getMessageOfLast() {
         List<CovidItemElement> list = item.getItemList();
-        //何番目
-        CovidItemElement atLast = list.get(0); // (2)
-        LocalDate date = atLast.getDate();  // (3)
-        int month = date.getMonthValue(); // (4)
-        int dayOfMonth = date.getDayOfMonth(); // (5)
-        String region = atLast.getNameJp();; // (6)
-        int npatients = atLast.getNpatients(); // (7)
+
+        String region = list.get(0).getNameJp();
+
+        RateOfIncrease rateOfIncrease = new RateOfIncrease(list);
+        float rate = rateOfIncrease.rate();
+
         return String.format(
-                MESSAGE_FORMAT,region,month,dayOfMonth,npatients); // (8)
+                MESSAGE_FORMAT,region,rate);
     }
 }
