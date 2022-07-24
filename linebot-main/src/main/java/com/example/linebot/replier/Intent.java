@@ -11,6 +11,8 @@ public enum Intent {
     COVID_TOTAL("^(.*)の感染者数$"),
     //追加
     COVID_RATE("^(.*)の新規感染者増加率"),
+    //最終課題追加
+    SUMMARY("^(.*)について知りたい"),
     UNKNOWN(".+");
 
     private final String regexp;
