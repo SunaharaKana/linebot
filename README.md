@@ -13,3 +13,6 @@
 
 ・要約文をJavaで返信させる
 
+<img src="https://github.com/SunaharaKana/linebot/blob/master/IMG_3840.png" width="30%" />
+
+結果
