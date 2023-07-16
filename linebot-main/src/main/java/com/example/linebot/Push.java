@@ -31,7 +31,7 @@ public class Push {
     private static final Logger log = LoggerFactory.getLogger(Push.class);
 
     // push先のユーザID
-    private String userId = "U0346ece35886a173a9fececb51a9208c";
+    private String userId = "";
 
     private final LineMessagingClient messagingClient;
 
